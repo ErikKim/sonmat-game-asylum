@@ -1,0 +1,824 @@
+{
+ "name": "Batman: Arkham Asylum GOTY",
+ "name_ko": "배트맨: 아캄 어사일럼",
+ "exe": "ShippingPC-BmGame.exe",
+ "steam_input": "on",
+ "engine": "ue4",
+ "event_file": "C:\\Users\\Public\\dshaptics\\events_ue3.log",
+ "_run_note": "32-bit Unreal Engine 3 game. Hook = UAudioComponent::Play in the game's exe (dll/dshaptics_ue3_x86.dll, byte patterns below; the exe is not packed): one line per sound, 'ue:<FMOD project>.<SoundCue>|<owner actor>'. Every SoundCue names one FMOD Designer event of its project (an RFMODSound object), the same name the game's own sound list prints. Sounds = those projects inside the game's packages (LZO chunks, FEV1 + FSB4; tools/ue3_fmod.py). Loaded by our 32-bit version.dll beside the exe - never injected (a 64-bit engine cannot inject a 32-bit game). The game reads XInput (XINPUT1_3): Steam Input on for the DualSense; turn the game's vibration off.",
+ "_controls_note": "Default pad layout (general knowledge, not read from this install): square strike, triangle counter, circle cape stun, cross run / vault (double tap) / glide when falling, L1 detective mode, R1 grapnel (user 10-19), R2 throw the batarang / use the other gadgets, L2 aim the gadget (held), d-pad picks the gadget (batarang, batclaw, explosive gel, line launcher, sonic batarang). Combat = freeflow: strike chains, counters on the warning sign, a slow-motion close-up on the last enemy's knockout. Predator rooms: silent takedowns, inverted takedowns from gargoyles, glide kicks. No ranged stream of our own, no vehicle driven by the player. The biggest moments: the counter, the slow-motion knockout of the last enemy, a silent takedown.",
+ "_names_note": "Names are good: the FMOD project tells the owner (PL_ = Batman, EN_ = enemies, NPC_, PS_/AMBI_ = places, DV_ = Batman's gadgets, SP_ = scripted set pieces, MUS_, UI_) and the event tells the move ('PL_CombatImpactsSFX.Counter_Batman_Punch_Enemy_Face', 'Enemy_Punch_Batman_Face' = I am hit). Floors = one project per surface ('PL_FootSteps_MetalGrateSFX.FootStep'), so steps carry the floor in their name. 1,945 events in 580 projects read from the install; their first layer is what plays here (a layer switched on by a game parameter - 'Blocked', 'Strength' - is not followed). Not read yet: projects whose events sit under a one-word category (UI_*, SJ_*, the numbered cutscene projects 115_..705_). Which names the game really posts in play is unknown until the hook has run once (never run in the game yet).",
+ "_places_note": "Arkham Island, on foot only. Water: Killer Croc's sewers and flooded corridors (PL_FootSteps_PuddleSFX / DeepWaterFX steps, the dive PL_Batman_WaterDiveSFX). Air: gliding with the cape between rooftops and gargoyles (PL_CapeSFX bm_glider_open .. bm_glider_close), being pulled up by the grapnel (DV_GrappleGunSFX Start / Loop / End), the line launcher. Scarecrow's nightmare sequences (SJ_ / SP_Scarecrow*). Metal grates, broken glass, foliage in the Botanical Gardens, dirt in the caves - all named floors.",
+ "player": ".",
+ "beds": {
+  "glide": {
+   "on": "^PL_CapeSFX\\.(bm_glider_open\\w*|Glide)$",
+   "off": "^PL_CapeSFX\\.(bm_glider_close|bm_jump_close)$|^PL_FootSteps_\\w+\\.(Land|FootStep)$|^PL_BeltSFX\\.bm_land$|^SJ_Combat_SubjectivesSFX\\.Glide_Kick_Impact$|^PL_BatmanEmotesSFX\\.Hurt_Scream_Collapse$", "_off_note": "10-25: shot down mid-glide - no landing sound came and the glide shook on for its full 30 s: also my collapse, my glide kick landing, the belt's landing",
+   "wave": "glide",
+   "every": 0.09,
+   "vary": 0.7,
+   "max": 30
+  },
+  "reel": {
+   "on": "^DV_GrappleGunSFX\\.(Start|Loop)$|^PL_RopeSlideSFX\\.SlideStart$",
+   "off": "^DV_GrappleGunSFX\\.End$|^PL_RopeSlideSFX\\.SlideEnd$|^PL_FootSteps_\\w+\\.(Land|FootStep)$|^PL_LedgeFallSFX\\.LedgeGrab$|^PL_BeltSFX\\.bm_land$|^PL_BatmanEmotesSFX\\.Hurt_Scream_Collapse$",
+   "wave": "reel",
+   "every": 0.07,
+   "vary": 0.6,
+   "max": 8
+  }
+ },
+ "triggers": {
+  "batarang": {
+   "pad": "R2",
+   "effect": "bow",
+   "start": 1,
+   "force": 3,
+   "hold": 3600,
+   "match": "^DV_BatarangSFX\\.Batarang_Draw$",
+   "until": "^DV_BatarangSFX\\.(Batarang_Putaway|Batarang_Launch|Throw)$",
+   "_note": "like a bow (user 10-19): pulls heavier until it snaps back, while L2 aims the batarang. Ends on the throw (no putaway follows one) or when L2 is let go (R2 alone = crouch). 10-19 lowered (4/6 -> 3/4, user 'too strong')",
+   "end": 6,
+   "snap": 4,
+   "while": [
+    "l2"
+   ]
+  },
+  "gel": {
+   "pad": "R2",
+   "effect": "resist",
+   "start": 30,
+   "force": 110,
+   "hold": 3600,
+   "match": "^DV_BatGelSFX\\.TakeOut$",
+   "until": "^DV_BatGelSFX\\.(Putaway|Use)$",
+   "_note": "the explosive gel spray (user 10-19 'a strong trigger that lasts'): firm resistance while L2 aims the gel. Ends on putaway, on detonating (Use: no putaway follows) or when L2 is let go. 10-19 lowered 200 -> 110",
+   "while": [
+    "l2"
+   ]
+  },
+  "line": {
+   "preset": "gun_launcher",
+   "match": "^DV_LineLauncherSFX\\.LineLauncher_GetOut$",
+   "until": "^DV_LineLauncherSFX\\.(LineLauncher_PutAway|LineLauncherFire)$",
+   "_note": "the line launcher: a heavy click, like a launcher, while L2 aims it. 10-19 lowered 8 -> 5",
+   "force": 5,
+   "while": [
+    "l2"
+   ]
+  }
+ },
+ "source": {
+  "_note": "tools/soundprep.py asylum",
+  "type": "ue3_fmod",
+  "steam_dir": "Batman Arkham Asylum GOTY",
+  "exe": "Binaries/ShippingPC-BmGame.exe",
+  "trees": "trees.json",
+  "hap": "hap",
+  "spk": "spk",
+  "scenes": {
+   "rate": 4000,
+   "target": 0.35,
+   "pct": 90,
+   "keep": 0.4,
+   "over": 1.15,
+   "_density_note": "10-25 user: cutscenes felt empty in long stretches - keep 0.15 / over 1.6 (impacts only, Wukong) -> 0.4 / 1.15: felt time about x2 (211: 25 -> 44 %), strong moments unchanged",
+   "cues": "^(?!SP_\\w+\\.(Bell_Drop_Imp|Lifts_Fall|SP_Lift_fall|ChandelierDrop|Fake_Crash|Ambulance_Push_Explode|Batwing_Blast|Lift_Land)$)(\\d{3}_\\w+|SP_\\w+)\\.\\w+$",
+   "skip": "$^",
+   "_movies_note": "story cutscenes are Bink movies (BmGame/Movies/<nnn>_*.bik): 12 sound tracks each, 5-10 = one voice per language (identical in scenes without lines, 607), 1-4 the scene's sound - summed. Logos, loading screens left out",
+   "movies": {"dir": "BmGame/Movies", "match": "^(\\d{3}_|Cave_B1|gb1_|Batmobile_Intro_Alternate)", "tracks": [1, 2, 3, 4]},
+   "trees": "trees_seq.json",
+   "dir": "seq"
+  },
+  "speaker": "^UI_Riddler\\w+\\.RIDDLER_(Trophy|Secrets|Challenge|Challenge_Done)$",
+  "_cue_defs_note": "the Riddler projects' event tables do not read (sound definitions only): cue names from the packages' name tables (Admin_A/B4.umap, BmGame.u)",
+  "cue_defs": {"UI_RiddlerTrophyPickUpSFX.RIDDLER_Trophy": "/UI_RiddlerTrophyPickup", "UI_RiddlerSecretsPickUpSFX.RIDDLER_Secrets": "/UI_RiddlerSecretsPickup", "UI_RiddlerChallengeSFX.RIDDLER_Challenge": "/RIDDLERCHALLENGE_Unlocked", "UI_RiddlerChallengeSFX.RIDDLER_Challenge_Done": "/UI_RiddlerChallengeDone"},
+  "lag_fix": true
+ },
+ "master": 1.0,
+ "duck": 0.3,
+ "gap": 0.05,
+ "combat_hold": 6.0,
+ "waves": {
+  "_note": "parts play in sequence: [freq Hz, length ms, amp, decay ms] = burst, a number = gap ms, {\"swell\": [freq, ms, amp]}",
+  "impact": [
+   [
+    85,
+    60,
+    0.5,
+    24
+   ]
+  ],
+  "smash": [
+   [
+    60,
+    110,
+    0.8,
+    45
+   ]
+  ],
+  "pierce": [
+   [
+    250,
+    10,
+    0.55,
+    3
+   ]
+  ],
+  "blunt": [
+   [
+    55,
+    90,
+    0.45,
+    40
+   ]
+  ],
+  "guard": [
+   [
+    70,
+    90,
+    0.45,
+    35
+   ]
+  ],
+  "pguard": [
+   [
+    260,
+    18,
+    1.0,
+    5
+   ],
+   [
+    150,
+    25,
+    0.8,
+    8
+   ],
+   [
+    70,
+    130,
+    0.75,
+    55
+   ]
+  ],
+  "fatal": [
+   [
+    55,
+    90,
+    1.0,
+    40
+   ],
+   30,
+   [
+    45,
+    300,
+    0.85,
+    140
+   ]
+  ],
+  "stagger": [
+   [
+    200,
+    15,
+    0.8,
+    5
+   ],
+   [
+    70,
+    120,
+    0.8,
+    50
+   ]
+  ],
+  "hurt": [
+   [
+    70,
+    50,
+    0.6,
+    25
+   ]
+  ],
+  "struck": [
+   [
+    70,
+    60,
+    0.9,
+    30
+   ],
+   [
+    45,
+    140,
+    0.6,
+    70
+   ]
+  ],
+  "down": [
+   [
+    50,
+    120,
+    0.9,
+    50
+   ],
+   20,
+   [
+    40,
+    280,
+    0.6,
+    130
+   ]
+  ],
+  "death": [
+   [
+    50,
+    150,
+    1.0,
+    70
+   ],
+   40,
+   {
+    "swell": [
+     40,
+     900,
+     0.5
+    ]
+   }
+  ],
+  "swing": [
+   [
+    140,
+    25,
+    0.15,
+    10
+   ]
+  ],
+  "lunge": [
+   [
+    60,
+    90,
+    0.35,
+    40
+   ]
+  ],
+  "dodge": [
+   [
+    130,
+    30,
+    0.35,
+    12
+   ],
+   50,
+   [
+    130,
+    30,
+    0.3,
+    12
+   ]
+  ],
+  "land": [
+   [
+    60,
+    70,
+    0.35,
+    30
+   ]
+  ],
+  "step": [
+   [
+    65,
+    35,
+    0.15,
+    14
+   ]
+  ],
+  "ground": [
+   [
+    65,
+    35,
+    0.15,
+    14
+   ]
+  ],
+  "splash": [
+   [
+    110,
+    40,
+    0.12,
+    15
+   ]
+  ],
+  "charge": [
+   [
+    100,
+    30,
+    0.4,
+    12
+   ],
+   45,
+   [
+    100,
+    35,
+    0.55,
+    14
+   ]
+  ],
+  "heal": [
+   {
+    "swell": [
+     70,
+     600,
+     0.35
+    ]
+   }
+  ],
+  "buff": [
+   {
+    "swell": [
+     90,
+     400,
+     0.4
+    ]
+   }
+  ],
+  "uitick": [
+   [
+    220,
+    8,
+    0.15,
+    3
+   ]
+  ],
+  "click": [
+   [
+    180,
+    12,
+    0.4,
+    5
+   ],
+   30,
+   [
+    110,
+    40,
+    0.35,
+    15
+   ]
+  ],
+  "thud": [
+   [
+    55,
+    260,
+    0.4,
+    110
+   ]
+  ],
+  "break": [
+   [
+    80,
+    120,
+    0.5,
+    50
+   ]
+  ],
+  "boom": [
+   [
+    45,
+    220,
+    1.0,
+    120
+   ]
+  ],
+  "blast": [
+   [
+    50,
+    120,
+    1.0,
+    50
+   ],
+   [
+    40,
+    250,
+    0.6,
+    120
+   ]
+  ],
+  "seq": [
+   [
+    60,
+    160,
+    0.3,
+    70
+   ]
+  ],
+  "whoosh": [
+   [
+    120,
+    60,
+    0.35,
+    25
+   ]
+  ],
+  "soft": [
+   {
+    "swell": [
+     120,
+     200,
+     0.2
+    ]
+   }
+  ],
+  "tick": [
+   [
+    200,
+    15,
+    0.3,
+    5
+   ]
+  ],
+  "patter": [
+   [
+    180,
+    14,
+    0.3,
+    6
+   ]
+  ],
+  "spatter": [
+   [
+    230,
+    8,
+    0.25,
+    4
+   ]
+  ],
+  "quake": [
+   {
+    "swell": [
+     38,
+     1200,
+     0.45
+    ]
+   }
+  ],
+  "roar": [
+   {
+    "swell": [
+     42,
+     1400,
+     0.6
+    ]
+   }
+  ],
+  "warp": [
+   {
+    "swell": [
+     60,
+     500,
+     0.45
+    ]
+   },
+   [
+    90,
+    40,
+    0.5,
+    15
+   ]
+  ],
+  "hold": [
+   [
+    150,
+    60,
+    0.18,
+    40
+   ]
+  ],
+  "glide": [
+   [
+    60,
+    80,
+    0.1,
+    40
+   ],
+   [
+    120,
+    30,
+    0.04,
+    15
+   ]
+  ],
+  "reel": [
+   [
+    90,
+    50,
+    0.16,
+    25
+   ]
+  ]
+ },
+ "steps": {
+  "texture": {
+   "peak": 0.3,
+   "peaks": [
+    [
+     "snow.?deep",
+     0.36
+    ],
+    [
+     "grass",
+     0.26
+    ]
+   ],
+   "match": "^PL_FootSteps_(Puddle|DeepWater|Foiliage|Dirt|BrkGlass|MetalGrate|MetLadder|Roach)\\w*\\.(FootStep|WalkBack)$"
+  }
+ },
+ "rules": [
+  {
+   "match": "^(MUS_|UI_|AMBI_|Tape_|TAP_|DV_OracleRadio|DV_BatWrist|DV_Decipher|DV_SonicRes|DV_SporeScanner|FR_|PL_BeltSFX|PL_CapeSFX\\.bm_gen_|PL_FootSteps_\\w+\\.(Turn|SlideStop)|EN_\\w*(Emote|Vocal|Breathe|Foley)|EN_WhooshesSFX|EN_FootstepsSFX|NPC_)",
+   "_note": "music, menus, tapes, scanners, Batman's belt and cape rustle, foot turns, enemy voices / whooshes / steps: never a vibration"
+  },
+  {
+   "match": "^PL_Batman_WaterDiveSFX\\.Batman_Dive$",
+   "wave": "splash",
+   "who": "any",
+   "_slot": "place"
+  },
+  {
+   "match": "^PL_CombatImpactsSFX\\.Counter_Batman_\\w+$",
+   "wave": "pguard",
+   "who": "any",
+   "_slot": "parry",
+   "combat": true
+  },
+  {
+   "match": "^PL_SlowDownSFX\\.(Combat_SlowMotion(_Start)?|SlowMo_Hit|Knockout)$|^PL_NeckCrackSFX\\.NeckCrack$",
+   "wave": "fatal",
+   "who": "any",
+   "_slot": "finisher",
+   "combat": true
+  },
+  {
+   "match": "^PL_CombatImpactsSFX\\.((Silent_)?Counter_Block_Enemy|Batman_Block_Enemy)$|^PL_BatmanCombatSFX\\.Batman_Block_Enemy$|^PL_BatmanSFX\\.Block$",
+   "wave": "guard",
+   "who": "any",
+   "_slot": "guard",
+   "combat": true
+  },
+  {
+   "match": "^PL_Bodyfall_ConcreteSFX\\.Bodyfall$|^PL_CapeSFX\\.breakfall$|^PL_LedgeFallSFX\\.LedgeFall$",
+   "wave": "down",
+   "who": "any",
+   "_slot": "down",
+   "combat": true
+  },
+  {
+   "match": "^PL_CombatImpactsSFX\\.(Enemy_Knockout_Batman|Enemy_Hit_Batman_Venom)$|^PL_BatmanCombatSFX\\.Hit_Batman_BaneMode$|^EN_BaneImpactsSFX\\.(ChargeImpact|PunchImpact)$",
+   "wave": "struck",
+   "who": "any",
+   "_slot": "struck",
+   "combat": true
+  },
+  {
+   "match": "^PL_CombatImpactsSFX\\.(Enemy_(Punch|Kick)_Batman_\\w+|Batman_Impacted_\\w+)$|^PL_BatmanCombatSFX\\.(Hit_Batman_(Body|Face)|Batman_Impacted\\w*)$|^PL_BatmanSFX\\.BeenHit$",
+   "wave": "hurt",
+   "who": "any",
+   "_slot": "hurt",
+   "combat": true
+  },
+  {
+   "match": "^EN_BoneBreakSFX\\.\\w+$",
+   "wave": "smash",
+   "who": "any",
+   "_slot": "hit_heavy",
+   "combat": true
+  },
+  {
+   "match": "^PL_CombatImpactsSFX\\.(Silent_)?Batman_(Punch|Kick)_Enemy_\\w+$|^PL_BatmanCombatSFX\\.(FacePunch|BodyPunch|Kick|Punch|Batman_Hit_Enemy_\\w+)$|^PL_BatmanSFX\\.(Hit|WeakPunch|GrabEnemy)$",
+   "wave": "blunt",
+   "who": "any",
+   "_slot": "hit_blunt",
+   "combat": true
+  },
+  {
+   "match": "^DV_BatarangSFX\\.(Impact\\w+|Batarang_Impact|SonicBatarangHit|Sonic_Batarang_Hit02)$|^PL_CapeSFX\\.Cape_Stun_Success$|^DV_GrappleGunSFX\\.Grapple_Impact$|^DV_LineLauncherSFX\\.LineLauncher_Impact$",
+   "wave": "impact",
+   "who": "any",
+   "_slot": "hit_light",
+   "combat": true
+  },
+  {
+   "match": "^DV_BatGelSFX\\.(ExplodeFinal|Explode|Expl_Gel_\\w+)$|^PS_WallDestructionSFX\\.(WallDestruction|SlowMo_WallDestruction\\w*|FloorDestruction|CrocBoss_WallDestruction|Scare_FloorDestruction)$",
+   "wave": "boom",
+   "who": "any",
+   "_slot": "boom"
+  },
+  {
+   "match": "^DV_GrappleGunSFX\\.GrappleFire$|^DV_LineLauncherSFX\\.LineLauncherFire$|^DV_BatarangSFX\\.Batarang_Launch$|^DV_SonicBatarangSFX\\.Sonic_Batarang_Throw$",
+   "wave": "tick",
+   "who": "any",
+   "_slot": "shot"
+  },
+  {
+   "match": "^PL_FlyKickSFX\\.FlyKick$|^PL_CapeSFX\\.bm_spinsweep$",
+   "wave": "lunge",
+   "who": "any",
+   "_slot": "swing_heavy",
+   "combat": true,
+   "player_control": true
+  },
+  {
+   "match": "^PL_BatmanCombatSFX\\.(MidWhoosh1|HiWhoosh1|DeepWhoosh\\d)$|^PL_WhooshSweetenerSFX\\.\\w+$|^PL_SlowDownSFX\\.SlowMo_Whoosh_\\w+$|^PL_CapeSFX\\.Cape_Distract_\\w+$|^PL_BatmanSFX\\.Miss$",
+   "wave": "swing",
+   "who": "any",
+   "_slot": "swing",
+   "combat": true,
+   "player_control": true
+  },
+  {
+   "match": "^PL_CapeSFX\\.bm_flycamel_0\\d(_quiet)?$|^PL_BatmanSFX\\.Dodge$",
+   "wave": "dodge",
+   "who": "any",
+   "_slot": "dodge",
+   "combat": true,
+   "player_control": true
+  },
+  {
+   "match": "^PL_JumpSFX\\.JumpUp$|^PL_FootSteps_\\w+\\.Jumpoff$|^PL_CapeSFX\\.bm_jump_open$",
+   "wave": "soft",
+   "who": "any",
+   "_slot": "jump",
+   "player_control": true
+  },
+  {
+   "match": "^PL_FootSteps_\\w+\\.Land$|^PL_LedgeFallSFX\\.LedgeGrab$",
+   "wave": "land",
+   "who": "any",
+   "_slot": "land",
+   "player_control": true
+  },
+  {
+   "match": "^PL_FootSteps_(Puddle|DeepWater|Foiliage|Dirt|BrkGlass|MetalGrate|MetLadder|Roach)\\w*\\.(FootStep|WalkBack)$",
+   "wave": "ground",
+   "who": "any",
+   "_slot": "step_texture",
+   "player_control": true
+  },
+  {
+   "match": "^PL_FootSteps_\\w+\\.(FootStep|WalkBack)$|^PL_FootStepsSFX\\.\\w+$",
+   "wave": "step",
+   "who": "any",
+   "_slot": "step",
+   "combat_only": true,
+   "player_control": true
+  },
+  {
+   "match": "^PL_EdgeShimmySFX\\.(LHand|RHand)$|^PL_Hand_\\w+\\.Impact$|^PL_GelCollectSFX\\.Grab_Gel$",
+   "wave": "soft",
+   "who": "any",
+   "_slot": "touch"
+  },
+  {
+   "match": "^DV_BatarangSFX\\.(Batarang_Draw|Batarang_Putaway)$|^DV_BatGelSFX\\.(TakeOut|Putaway)$|^DV_LineLauncherSFX\\.LineLauncher_(GetOut|PutAway)$",
+   "wave": "click",
+   "who": "any",
+   "_slot": "click"
+  },
+  {
+   "match": "^SP_\\w+\\.(Bell_Drop_Imp|Lifts_Fall|SP_Lift_fall|ChandelierDrop|Fake_Crash|Ambulance_Push_Explode|Batwing_Blast|Lift_Land)$|^PS_WallDestructionSFX\\.(Venom_Plants_Rumble|Pillar_Pull)$",
+   "wave": "quake",
+   "who": "any",
+   "_slot": "quake"
+  },
+  {
+   "match": "^EN_BaneSFX\\.(Roar|Scream)$",
+   "wave": "roar",
+   "who": "any",
+   "_slot": "roar"
+  }
+ ],
+ "style": {
+  "hit": "sb",
+  "rough": "hit",
+  "top": "^PL_CombatImpactsSFX\\.Counter_Batman_\\w+$|^pguard$|^PL_SlowDownSFX\\.(Combat_SlowMotion_Start|SlowMo_Hit|Knockout)$|^PL_NeckCrackSFX\\.NeckCrack$|^fatal$",
+  "skip": "^(click|dodge|ground|land|lunge|soft|step|swing|tick)$|^DV_GrappleGunSFX\\.GrappleFire$|^DV_LineLauncherSFX\\.LineLauncherFire$|^DV_BatarangSFX\\.Batarang_Launch$|^DV_SonicBatarangSFX\\.Sonic_Batarang_Throw$|^PL_FlyKickSFX\\.FlyKick$|^PL_CapeSFX\\.bm_spinsweep$|^PL_BatmanCombatSFX\\.(MidWhoosh1|HiWhoosh1|DeepWhoosh\\d)$|^PL_WhooshSweetenerSFX\\.\\w+$|^PL_SlowDownSFX\\.SlowMo_Whoosh_\\w+$|^PL_CapeSFX\\.Cape_Distract_\\w+$|^PL_BatmanSFX\\.Miss$|^PL_CapeSFX\\.bm_flycamel_0\\d(_quiet)?$|^PL_BatmanSFX\\.Dodge$|^PL_JumpSFX\\.JumpUp$|^PL_FootSteps_\\w+\\.Jumpoff$|^PL_CapeSFX\\.bm_jump_open$|^PL_FootSteps_\\w+\\.Land$|^PL_LedgeFallSFX\\.LedgeGrab$|^PL_FootSteps_(Puddle|DeepWater|Foiliage|Dirt|BrkGlass|MetalGrate|MetLadder|Roach)\\w*\\.(FootStep|WalkBack)$|^PL_FootSteps_\\w+\\.(FootStep|WalkBack)$|^PL_FootStepsSFX\\.\\w+$|^PL_EdgeShimmySFX\\.(LHand|RHand)$|^PL_Hand_\\w+\\.Impact$|^PL_GelCollectSFX\\.Grab_Gel$|^DV_BatarangSFX\\.(Batarang_Draw|Batarang_Putaway)$|^DV_BatGelSFX\\.(TakeOut|Putaway)$|^DV_LineLauncherSFX\\.LineLauncher_(GetOut|PutAway)$"
+ },
+ "rough": {
+  "impact": "hit",
+  "smash": "hit_m",
+  "pierce": "stab",
+  "blunt": "blunt",
+  "guard": "guard",
+  "pguard": "pguard",
+  "fatal": "fatal",
+  "stagger": "stagger",
+  "hurt": "hit",
+  "struck": "hit",
+  "down": "down",
+  "death": "knockdown",
+  "swing": "swing",
+  "lunge": "swing_l",
+  "dodge": "roll",
+  "land": "land_heavy",
+  "step": "step",
+  "ground": "step_sand",
+  "splash": "step_water",
+  "charge": "charged",
+  "heal": "heal",
+  "buff": "buff",
+  "uitick": "uitick",
+  "click": "click",
+  "thud": "thud",
+  "break": "hit_wood",
+  "boom": "blast",
+  "blast": "blast",
+  "seq": "hit_s",
+  "whoosh": "swing_l",
+  "soft": "item",
+  "tick": "shot_s",
+  "patter": "shot_s",
+  "spatter": "hit_s",
+  "quake": "quake",
+  "roar": "quake",
+  "warp": "warp",
+  "hold": "spray"
+ },
+ "haptic_trim": [
+  [
+   "^PL_CombatImpactsSFX\\.Counter_Batman_\\w+$",
+   1.3
+  ],
+  [
+   "^PL_SlowDownSFX\\.(Combat_SlowMotion_Start|SlowMo_Hit|Knockout)$|^PL_NeckCrackSFX\\.NeckCrack$",
+   1.0
+  ],
+  [
+   "^PL_CombatImpactsSFX\\.((Silent_)?Counter_Block_Enemy|Batman_Block_Enemy)$|^PL_BatmanCombatSFX\\.Batman_Block_Enemy$|^PL_BatmanSFX\\.Block$",
+   0.8
+  ],
+  [
+   "^PL_Bodyfall_ConcreteSFX\\.Bodyfall$|^PL_CapeSFX\\.breakfall$|^PL_LedgeFallSFX\\.LedgeFall$",
+   0.9
+  ],
+  [
+   "^PL_CombatImpactsSFX\\.(Enemy_Knockout_Batman|Enemy_Hit_Batman_Venom)$|^PL_BatmanCombatSFX\\.Hit_Batman_BaneMode$|^EN_BaneImpactsSFX\\.(ChargeImpact|PunchImpact)$",
+   0.8
+  ],
+  [
+   "^PL_CombatImpactsSFX\\.(Enemy_(Punch|Kick)_Batman_\\w+|Batman_Impacted_\\w+)$|^PL_BatmanCombatSFX\\.(Hit_Batman_(Body|Face)|Batman_Impacted\\w*)$|^PL_BatmanSFX\\.BeenHit$",
+   0.8
+  ],
+  [
+   "^EN_BoneBreakSFX\\.\\w+$",
+   1.1
+  ],
+  [
+   "^PL_CombatImpactsSFX\\.(Silent_)?Batman_(Punch|Kick)_Enemy_\\w+$|^PL_BatmanCombatSFX\\.(FacePunch|BodyPunch|Kick|Punch|Batman_Hit_Enemy_\\w+)$|^PL_BatmanSFX\\.(Hit|WeakPunch|GrabEnemy)$",
+   0.9
+  ],
+  [
+   "^DV_BatarangSFX\\.(Impact\\w+|Batarang_Impact|SonicBatarangHit|Sonic_Batarang_Hit02)$|^PL_CapeSFX\\.Cape_Stun_Success$|^DV_GrappleGunSFX\\.Grapple_Impact$|^DV_LineLauncherSFX\\.LineLauncher_Impact$",
+   0.7
+  ],
+  [
+   "^DV_BatGelSFX\\.(ExplodeFinal|Explode|Expl_Gel_\\w+)$|^PS_WallDestructionSFX\\.(WallDestruction|SlowMo_WallDestruction\\w*|FloorDestruction|CrocBoss_WallDestruction|Scare_FloorDestruction)$",
+   1.0
+  ],
+  [
+   "^DV_GrappleGunSFX\\.GrappleFire$|^DV_LineLauncherSFX\\.LineLauncherFire$|^DV_BatarangSFX\\.Batarang_Launch$|^DV_SonicBatarangSFX\\.Sonic_Batarang_Throw$",
+   0.5
+  ],
+  [
+   "^PL_FlyKickSFX\\.FlyKick$|^PL_CapeSFX\\.bm_spinsweep$",
+   0.65
+  ],
+  [
+   "^PL_BatmanCombatSFX\\.(MidWhoosh1|HiWhoosh1|DeepWhoosh\\d)$|^PL_WhooshSweetenerSFX\\.\\w+$|^PL_SlowDownSFX\\.SlowMo_Whoosh_\\w+$|^PL_CapeSFX\\.Cape_Distract_\\w+$|^PL_BatmanSFX\\.Miss$",
+   0.35
+  ],
+  [
+   "^DV_BatarangSFX\\.(Batarang_Draw|Batarang_Putaway)$|^DV_BatGelSFX\\.(TakeOut|Putaway)$|^DV_LineLauncherSFX\\.LineLauncher_(GetOut|PutAway)$",
+   0.5
+  ]
+ ],
+ "speaker": {
+  "gain": 0.7,
+  "all": false,
+  "allow": "^UI_Riddler\\w+\\.RIDDLER_(Trophy|Secrets|Challenge|Challenge_Done)$",
+  "gap": 20,
+  "_note": "10-25 user: the pad speaker was a mess (the slow-motion sound, 4.65 s, 5 times in 40 s of one fight - the game slows down more than once a fight) -> the Riddler's: a trophy / a secret picked up, a challenge unlocked / done (user: '리들러 물음표를 먹을 때')"
+ },
+ "cutscene": {
+  "gain": 2.0,
+  "skip_grace": 2.0,
+  "max_s": 300,
+  "match": "impact|hit|crash|explo|break|slam|fall|door|gun|clash|stab|thud",
+  "wave": "seq",
+  "gap": 0.12,
+  "tracks": "trees_seq.json",
+  "dir": "seq"
+ },
+ "clips": {
+  "trees": "trees.json",
+  "hap": "hap",
+  "spk": "spk"
+ },
+ "snap": "^PL_CombatImpactsSFX\\.Counter_Batman_\\w+$|^pguard$|^PL_SlowDownSFX\\.(Combat_SlowMotion_Start|SlowMo_Hit|Knockout)$|^PL_NeckCrackSFX\\.NeckCrack$|^fatal$",
+ "_made": "tools/new_profile.py from profiles/_model/model.json - first values, not felt yet"
+}

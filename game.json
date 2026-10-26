@@ -1,0 +1,142 @@
+{
+ "name": "Batman: Arkham Asylum GOTY",
+ "name_ko": "배트맨: 아캄 어사일럼",
+ "exe": "ShippingPC-BmGame.exe",
+ "steam_input": "on",
+ "engine": "ue4",
+ "event_file": "C:\\Users\\Public\\dshaptics\\events_ue3.log",
+ "_run_note": "32-bit Unreal Engine 3 game. Hook = UAudioComponent::Play in the game's exe (dll/dshaptics_ue3_x86.dll, byte patterns below; the exe is not packed): one line per sound, 'ue:<FMOD project>.<SoundCue>|<owner actor>'. Every SoundCue names one FMOD Designer event of its project (an RFMODSound object), the same name the game's own sound list prints. Sounds = those projects inside the game's packages (LZO chunks, FEV1 + FSB4; tools/ue3_fmod.py). Loaded by our 32-bit version.dll beside the exe - never injected (a 64-bit engine cannot inject a 32-bit game). The game reads XInput (XINPUT1_3): Steam Input on for the DualSense; turn the game's vibration off.",
+ "_controls_note": "Default pad layout (general knowledge, not read from this install): square strike, triangle counter, circle cape stun, cross run / vault (double tap) / glide when falling, L1 detective mode, R1 grapnel (user 10-19), R2 throw the batarang / use the other gadgets, L2 aim the gadget (held), d-pad picks the gadget (batarang, batclaw, explosive gel, line launcher, sonic batarang). Combat = freeflow: strike chains, counters on the warning sign, a slow-motion close-up on the last enemy's knockout. Predator rooms: silent takedowns, inverted takedowns from gargoyles, glide kicks. No ranged stream of our own, no vehicle driven by the player. The biggest moments: the counter, the slow-motion knockout of the last enemy, a silent takedown.",
+ "_names_note": "Names are good: the FMOD project tells the owner (PL_ = Batman, EN_ = enemies, NPC_, PS_/AMBI_ = places, DV_ = Batman's gadgets, SP_ = scripted set pieces, MUS_, UI_) and the event tells the move ('PL_CombatImpactsSFX.Counter_Batman_Punch_Enemy_Face', 'Enemy_Punch_Batman_Face' = I am hit). Floors = one project per surface ('PL_FootSteps_MetalGrateSFX.FootStep'), so steps carry the floor in their name. 1,945 events in 580 projects read from the install; their first layer is what plays here (a layer switched on by a game parameter - 'Blocked', 'Strength' - is not followed). Not read yet: projects whose events sit under a one-word category (UI_*, SJ_*, the numbered cutscene projects 115_..705_). Which names the game really posts in play is unknown until the hook has run once (never run in the game yet).",
+ "_places_note": "Arkham Island, on foot only. Water: Killer Croc's sewers and flooded corridors (PL_FootSteps_PuddleSFX / DeepWaterFX steps, the dive PL_Batman_WaterDiveSFX). Air: gliding with the cape between rooftops and gargoyles (PL_CapeSFX bm_glider_open .. bm_glider_close), being pulled up by the grapnel (DV_GrappleGunSFX Start / Loop / End), the line launcher. Scarecrow's nightmare sequences (SJ_ / SP_Scarecrow*). Metal grates, broken glass, foliage in the Botanical Gardens, dirt in the caves - all named floors.",
+ "hook": {
+  "native": {
+   "dll": "dshaptics_ue3_x86.dll",
+   "sigs": {
+    "AudioComponentPlay": "51 83 3D ?? ?? ?? ?? 00 56 8B F1 74",
+    "AudioComponentCleanup": "56 8B F1 F6 46 60 80 ?? ?? ?? ?? ?? ?? 55",
+    "FNameToString": "6A FF 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 51 56 A1 ?? ?? ?? ?? 33 C4 50 8D 44 24 0C 64 A3 00 00 00 00 33 C0 89 44 24 08 8B 74 24 1C 89 06 89 46 04 89 46 08 56",
+    "CueOffset": "4c",
+    "OwnerOffset": "40",
+    "NameOffset": "20",
+    "FlagsOffset": "60",
+    "PlayingBit": "80",
+    "ProjectOffset": "8c",
+    "EndFilter": "SP_,115_,204_,209_,213_,303_,307_,412_,605_,703_,705_"
+   }
+  }
+ },
+ "player": ".",
+ "extra_rules": [
+  {
+   "match": "^(MUS_|UI_|AMBI_|Tape_|TAP_|DV_OracleRadio|DV_BatWrist|DV_Decipher|DV_SonicRes|DV_SporeScanner|FR_|PL_BeltSFX|PL_CapeSFX\\.bm_gen_|PL_FootSteps_\\w+\\.(Turn|SlideStop)|EN_\\w*(Emote|Vocal|Breathe|Foley)|EN_WhooshesSFX|EN_FootstepsSFX|NPC_)",
+   "_note": "music, menus, tapes, scanners, Batman's belt and cape rustle, foot turns, enemy voices / whooshes / steps: never a vibration"
+  },
+  {
+   "match": "^PL_Batman_WaterDiveSFX\\.Batman_Dive$",
+   "wave": "splash",
+   "who": "any",
+   "_slot": "place"
+  }
+ ],
+ "waves": {
+  "glide": [
+   [
+    60,
+    80,
+    0.1,
+    40
+   ],
+   [
+    120,
+    30,
+    0.04,
+    15
+   ]
+  ],
+  "reel": [
+   [
+    90,
+    50,
+    0.16,
+    25
+   ]
+  ]
+ },
+ "beds": {
+  "glide": {
+   "on": "^PL_CapeSFX\\.(bm_glider_open\\w*|Glide)$",
+   "off": "^PL_CapeSFX\\.(bm_glider_close|bm_jump_close)$|^PL_FootSteps_\\w+\\.(Land|FootStep)$",
+   "wave": "glide",
+   "every": 0.09,
+   "vary": 0.7,
+   "max": 30
+  },
+  "reel": {
+   "on": "^DV_GrappleGunSFX\\.(Start|Loop)$|^PL_RopeSlideSFX\\.SlideStart$",
+   "off": "^DV_GrappleGunSFX\\.End$|^PL_RopeSlideSFX\\.SlideEnd$|^PL_FootSteps_\\w+\\.(Land|FootStep)$|^PL_LedgeFallSFX\\.LedgeGrab$",
+   "wave": "reel",
+   "every": 0.07,
+   "vary": 0.6,
+   "max": 8
+  }
+ },
+ "triggers": {
+  "grapnel": {
+   "preset": "wire",
+   "pad": "R2",
+   "match": ".",
+   "_note": "R2 is the grapnel and the gadget's fire all game long (Sekiro's hook feel, on R2 here). First value, not felt"
+  }
+ },
+ "slots": {
+  "parry": [
+   "^PL_CombatImpactsSFX\\.Counter_Batman_\\w+$",
+   {
+    "speaker": false,
+    "_why": "a counter comes every few seconds in a fight: vibration only"
+   }
+  ],
+  "finisher": [
+   "^PL_SlowDownSFX\\.(Combat_SlowMotion(_Start)?|SlowMo_Hit|Knockout)$|^PL_NeckCrackSFX\\.NeckCrack$",
+   {
+    "speaker": "^PL_SlowDownSFX\\.Combat_SlowMotion$",
+    "_why": "vibration on every knockout and silent takedown; the pad speaker only on the last enemy's slow motion (user 10-19: too often - Knockout comes on every knockout)"
+   }
+  ],
+  "guard": "^PL_CombatImpactsSFX\\.((Silent_)?Counter_Block_Enemy|Batman_Block_Enemy)$|^PL_BatmanCombatSFX\\.Batman_Block_Enemy$|^PL_BatmanSFX\\.Block$",
+  "struck": "^PL_CombatImpactsSFX\\.(Enemy_Knockout_Batman|Enemy_Hit_Batman_Venom)$|^PL_BatmanCombatSFX\\.Hit_Batman_BaneMode$|^EN_BaneImpactsSFX\\.(ChargeImpact|PunchImpact)$",
+  "down": "^PL_Bodyfall_ConcreteSFX\\.Bodyfall$|^PL_CapeSFX\\.breakfall$|^PL_LedgeFallSFX\\.LedgeFall$",
+  "hurt": "^PL_CombatImpactsSFX\\.(Enemy_(Punch|Kick)_Batman_\\w+|Batman_Impacted_\\w+)$|^PL_BatmanCombatSFX\\.(Hit_Batman_(Body|Face)|Batman_Impacted\\w*)$|^PL_BatmanSFX\\.BeenHit$",
+  "hit_heavy": "^EN_BoneBreakSFX\\.\\w+$",
+  "hit_blunt": "^PL_CombatImpactsSFX\\.(Silent_)?Batman_(Punch|Kick)_Enemy_\\w+$|^PL_BatmanCombatSFX\\.(FacePunch|BodyPunch|Kick|Punch|Batman_Hit_Enemy_\\w+)$|^PL_BatmanSFX\\.(Hit|WeakPunch|GrabEnemy)$",
+  "hit_light": "^DV_BatarangSFX\\.(Impact\\w+|Batarang_Impact|SonicBatarangHit|Sonic_Batarang_Hit02)$|^PL_CapeSFX\\.Cape_Stun_Success$|^DV_GrappleGunSFX\\.Grapple_Impact$|^DV_LineLauncherSFX\\.LineLauncher_Impact$",
+  "boom": "^DV_BatGelSFX\\.(ExplodeFinal|Explode|Expl_Gel_\\w+)$|^PS_WallDestructionSFX\\.(WallDestruction|SlowMo_WallDestruction\\w*|FloorDestruction|CrocBoss_WallDestruction|Scare_FloorDestruction)$",
+  "shot": "^DV_GrappleGunSFX\\.GrappleFire$|^DV_LineLauncherSFX\\.LineLauncherFire$|^DV_BatarangSFX\\.Batarang_Launch$|^DV_SonicBatarangSFX\\.Sonic_Batarang_Throw$",
+  "swing_heavy": "^PL_FlyKickSFX\\.FlyKick$|^PL_CapeSFX\\.bm_spinsweep$",
+  "swing": "^PL_BatmanCombatSFX\\.(MidWhoosh1|HiWhoosh1|DeepWhoosh\\d)$|^PL_WhooshSweetenerSFX\\.\\w+$|^PL_SlowDownSFX\\.SlowMo_Whoosh_\\w+$|^PL_CapeSFX\\.Cape_Distract_\\w+$|^PL_BatmanSFX\\.Miss$",
+  "dodge": "^PL_CapeSFX\\.bm_flycamel_0\\d(_quiet)?$|^PL_BatmanSFX\\.Dodge$",
+  "jump": "^PL_JumpSFX\\.JumpUp$|^PL_FootSteps_\\w+\\.Jumpoff$|^PL_CapeSFX\\.bm_jump_open$",
+  "land": "^PL_FootSteps_\\w+\\.Land$|^PL_LedgeFallSFX\\.LedgeGrab$",
+  "step_texture": "^PL_FootSteps_(Puddle|DeepWater|Foiliage|Dirt|BrkGlass|MetalGrate|MetLadder|Roach)\\w*\\.(FootStep|WalkBack)$",
+  "step": "^PL_FootSteps_\\w+\\.(FootStep|WalkBack)$|^PL_FootStepsSFX\\.\\w+$",
+  "touch": "^PL_EdgeShimmySFX\\.(LHand|RHand)$|^PL_Hand_\\w+\\.Impact$|^PL_GelCollectSFX\\.Grab_Gel$",
+  "click": "^DV_BatarangSFX\\.(Batarang_Draw|Batarang_Putaway)$|^DV_BatGelSFX\\.(TakeOut|Putaway)$|^DV_LineLauncherSFX\\.LineLauncher_(GetOut|PutAway)$",
+  "quake": "^SP_\\w+\\.(Bell_Drop_Imp|Lifts_Fall|SP_Lift_fall|ChandelierDrop|Fake_Crash|Ambulance_Push_Explode|Batwing_Blast|Lift_Land)$|^PS_WallDestructionSFX\\.(Venom_Plants_Rumble|Pillar_Pull)$",
+  "roar": "^EN_BaneSFX\\.(Roar|Scream)$",
+  "scene": "^SP_(MorgueParentsSFX|MorgueParentsambSFX|ScareCrowCorridor)\\.\\w+$"
+ },
+ "source": {
+  "_note": "tools/soundprep.py asylum",
+  "type": "ue3_fmod",
+  "steam_dir": "Batman Arkham Asylum GOTY",
+  "exe": "Binaries/ShippingPC-BmGame.exe",
+  "trees": "trees.json",
+  "hap": "hap",
+  "spk": "spk"
+ },
+ "scenes": {
+  "trees": "trees_seq.json",
+  "dir": "seq"
+ }
+}

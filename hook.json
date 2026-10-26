@@ -1,0 +1,18 @@
+{
+ "_about": "게임 연결: 이 게임을 분석해서 얻은 값 전부(훅 DLL·바이트 패턴·UE4SS 와 이 빌드에 필요한 것). tools/hooks.py 가 이것만 보고 게임 폴더에 파일을 통째로 쓴다(sonmat_paths.load_hook)",
+ "native": {
+  "dll": "dshaptics_ue3_x86.dll",
+  "sigs": {
+   "AudioComponentPlay": "51 83 3D ?? ?? ?? ?? 00 56 8B F1 74",
+   "AudioComponentCleanup": "56 8B F1 F6 46 60 80 ?? ?? ?? ?? ?? ?? 55",
+   "FNameToString": "6A FF 68 ?? ?? ?? ?? 64 A1 00 00 00 00 50 51 56 A1 ?? ?? ?? ?? 33 C4 50 8D 44 24 0C 64 A3 00 00 00 00 33 C0 89 44 24 08 8B 74 24 1C 89 06 89 46 04 89 46 08 56",
+   "CueOffset": "4c",
+   "OwnerOffset": "40",
+   "NameOffset": "20",
+   "FlagsOffset": "60",
+   "PlayingBit": "80",
+   "ProjectOffset": "8c",
+   "EndFilter": "SP_,115_,204_,209_,213_,303_,307_,412_,605_,703_,705_"
+  }
+ }
+}
