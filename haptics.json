@@ -117,14 +117,6 @@
     45
    ]
   ],
-  "pierce": [
-   [
-    250,
-    10,
-    0.55,
-    3
-   ]
-  ],
   "blunt": [
    [
     55,
@@ -176,20 +168,6 @@
     140
    ]
   ],
-  "stagger": [
-   [
-    200,
-    15,
-    0.8,
-    5
-   ],
-   [
-    70,
-    120,
-    0.8,
-    50
-   ]
-  ],
   "hurt": [
    [
     70,
@@ -226,22 +204,6 @@
     0.6,
     130
    ]
-  ],
-  "death": [
-   [
-    50,
-    150,
-    1.0,
-    70
-   ],
-   40,
-   {
-    "swell": [
-     40,
-     900,
-     0.5
-    ]
-   }
   ],
   "swing": [
    [
@@ -306,47 +268,6 @@
     15
    ]
   ],
-  "charge": [
-   [
-    100,
-    30,
-    0.4,
-    12
-   ],
-   45,
-   [
-    100,
-    35,
-    0.55,
-    14
-   ]
-  ],
-  "heal": [
-   {
-    "swell": [
-     70,
-     600,
-     0.35
-    ]
-   }
-  ],
-  "buff": [
-   {
-    "swell": [
-     90,
-     400,
-     0.4
-    ]
-   }
-  ],
-  "uitick": [
-   [
-    220,
-    8,
-    0.15,
-    3
-   ]
-  ],
   "click": [
    [
     180,
@@ -362,41 +283,11 @@
     15
    ]
   ],
-  "thud": [
-   [
-    55,
-    260,
-    0.4,
-    110
-   ]
-  ],
-  "break": [
-   [
-    80,
-    120,
-    0.5,
-    50
-   ]
-  ],
   "boom": [
    [
     45,
     220,
     1.0,
-    120
-   ]
-  ],
-  "blast": [
-   [
-    50,
-    120,
-    1.0,
-    50
-   ],
-   [
-    40,
-    250,
-    0.6,
     120
    ]
   ],
@@ -406,14 +297,6 @@
     160,
     0.3,
     70
-   ]
-  ],
-  "whoosh": [
-   [
-    120,
-    60,
-    0.35,
-    25
    ]
   ],
   "soft": [
@@ -433,22 +316,6 @@
     5
    ]
   ],
-  "patter": [
-   [
-    180,
-    14,
-    0.3,
-    6
-   ]
-  ],
-  "spatter": [
-   [
-    230,
-    8,
-    0.25,
-    4
-   ]
-  ],
   "quake": [
    {
     "swell": [
@@ -466,29 +333,6 @@
      0.6
     ]
    }
-  ],
-  "warp": [
-   {
-    "swell": [
-     60,
-     500,
-     0.45
-    ]
-   },
-   [
-    90,
-    40,
-    0.5,
-    15
-   ]
-  ],
-  "hold": [
-   [
-    150,
-    60,
-    0.18,
-    40
-   ]
   ],
   "glide": [
    [
@@ -702,16 +546,13 @@
  "rough": {
   "impact": "hit",
   "smash": "hit_m",
-  "pierce": "stab",
   "blunt": "blunt",
   "guard": "guard",
   "pguard": "pguard",
   "fatal": "fatal",
-  "stagger": "stagger",
   "hurt": "hit",
   "struck": "hit",
   "down": "down",
-  "death": "knockdown",
   "swing": "swing",
   "lunge": "swing_l",
   "dodge": "roll",
@@ -719,25 +560,13 @@
   "step": "step",
   "ground": "step_sand",
   "splash": "step_water",
-  "charge": "charged",
-  "heal": "heal",
-  "buff": "buff",
-  "uitick": "uitick",
   "click": "click",
-  "thud": "thud",
-  "break": "hit_wood",
   "boom": "blast",
-  "blast": "blast",
   "seq": "hit_s",
-  "whoosh": "swing_l",
   "soft": "item",
   "tick": "shot_s",
-  "patter": "shot_s",
-  "spatter": "hit_s",
   "quake": "quake",
-  "roar": "quake",
-  "warp": "warp",
-  "hold": "spray"
+  "roar": "quake"
  },
  "haptic_trim": [
   [
