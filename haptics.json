@@ -70,7 +70,7 @@
  },
  "source": {
   "_note": "tools/soundprep.py asylum",
-  "type": "ue3_fmod",
+  "type": "ue3_fmod", "auto_rules": "rules_auto.json",
   "steam_dir": "Batman Arkham Asylum GOTY",
   "exe": "Binaries/ShippingPC-BmGame.exe",
   "trees": "trees.json",

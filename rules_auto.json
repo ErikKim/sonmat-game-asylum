@@ -1,0 +1,373 @@
+{
+ "DV_BatGelSFX.GelSetting": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_BatGelSFX.Gel_ArmDevice": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_BatGelSFX.Gel_Countdown": {
+  "class": "charge",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_BatGelSFX.Use": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_BatarangSFX.Batarang_Atmos": {
+  "class": "my_swing",
+  "weight": "none",
+  "gain": 0.6,
+  "snap": false,
+  "count": 0
+ },
+ "DV_BatarangSFX.Batarang_Catch": {
+  "class": "my_hit",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": true,
+  "count": 0
+ },
+ "DV_BatarangSFX.Batarang_Drop": {
+  "class": "my_swing",
+  "weight": "none",
+  "gain": 0.6,
+  "snap": false,
+  "count": 0
+ },
+ "DV_BatarangSFX.Batarang_Spin": {
+  "class": "my_swing",
+  "weight": "none",
+  "gain": 0.6,
+  "snap": false,
+  "count": 0
+ },
+ "DV_GrappleGunSFX.End": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_GrappleGunSFX.GrappleFire_Distant": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_GrappleGunSFX.Loop": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_GrappleGunSFX.Start": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_HarpoonSFX.Impact": {
+  "class": "my_hit",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": true,
+  "count": 0
+ },
+ "DV_HarpoonSFX.RopeTension": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_SonicBatarangSFX.ArmDevice": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_SonicBatarangSFX.Overload": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_SonicBatarangSFX.Pulse": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "DV_SonicBatarangSFX.Sonic_Blade": {
+  "class": "my_swing",
+  "weight": "none",
+  "gain": 0.6,
+  "snap": false,
+  "count": 0
+ },
+ "DV_SonicBatarangSFX.Sonic_Loop": {
+  "class": "my_swing",
+  "weight": "none",
+  "gain": 0.6,
+  "snap": false,
+  "count": 0
+ },
+ "PL_BatmanCombatSFX.BM_TieUp": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_BatmanSmilexSFX.BatmanSmilex": {
+  "class": "get_hit",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": true,
+  "count": 0
+ },
+ "PL_CapeMovementSFX.Cape_Movement": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.Falling": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.Glide": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.Glide_OneShot": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.Glide_OneShot2": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_crouchdown": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_glider_close": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_glider_open": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_glider_open_extra01": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_jump_close": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_rndhs": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_slomo_rndhs": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_standup": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CapeSFX.bm_standup_quiet": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_CoughSFX.Cough": {
+  "class": "get_hit",
+  "weight": "light",
+  "gain": 0.6,
+  "snap": true,
+  "count": 0
+ },
+ "PL_CoughSFX.Cough_IvyGas": {
+  "class": "get_hit",
+  "weight": "light",
+  "gain": 0.6,
+  "snap": true,
+  "count": 0
+ },
+ "PL_EdgeShimmySFX.Reach": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_GelCollectSFX.Arm_Gel": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_Hand_MetLadderSFX.Slide": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_Hand_MetalSFX.Slide": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_Hand_StoneSFX.Slide": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_IvyPod_DestroySFX.PodDestroy": {
+  "class": "my_hit",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": true,
+  "count": 0
+ },
+ "PL_IvyPod_DestroySFX.PodPenetrate": {
+  "class": "my_hit",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": true,
+  "count": 0
+ },
+ "PL_IvyPod_DestroySFX.PodRip": {
+  "class": "my_hit",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": true,
+  "count": 0
+ },
+ "PL_LedgeFallSFX.Backup_Seq_LedgeFall": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_PontoonShakeSFX.PontoonShake": {
+  "class": "environment",
+  "weight": "none",
+  "gain": 0.7,
+  "snap": false,
+  "count": 0
+ },
+ "PL_PontoonShakeSFX.Shake_Attack": {
+  "class": "environment",
+  "weight": "none",
+  "gain": 0.7,
+  "snap": false,
+  "count": 0
+ },
+ "PL_RopeSlideSFX.Pulley_Attach": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_RopeSlideSFX.SlideEnd": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_RopeSlideSFX.SlideStart": {
+  "class": "move",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_TyingUpSFX.Tie_Up": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ },
+ "PL_TyingUpSFX.Tie_Up_Short": {
+  "class": "skill",
+  "weight": "none",
+  "gain": 1.0,
+  "snap": false,
+  "count": 0
+ }
+}
