@@ -83,10 +83,12 @@
    "keep": 0.4,
    "over": 1.15,
    "_density_note": "10-25 user: cutscenes felt empty in long stretches - keep 0.15 / over 1.6 (impacts only, Wukong) -> 0.4 / 1.15: felt time about x2 (211: 25 -> 44 %), strong moments unchanged",
-   "cues": "^(?!SP_\\w+\\.(Bell_Drop_Imp|Lifts_Fall|SP_Lift_fall|ChandelierDrop|Fake_Crash|Ambulance_Push_Explode|Batwing_Blast|Lift_Land)$)(\\d{3}_\\w+|SP_\\w+)\\.\\w+$",
+   "cues": "^(?!SP_\\w+\\.(Bell_Drop_Imp|Lifts_Fall|SP_Lift_fall|ChandelierDrop|Fake_Crash|Ambulance_Push_Explode|Batwing_Blast|Lift_Land|BatwingGlass_Break|Capsule_Impact|Venom_Plants01|PowerCut|PowerCut_PowerUp|Scarecrow_Lift_Seq_Stop)$)(\\d{3}_\\w+|SP_\\w+)\\.\\w+$",
    "skip": "$^",
    "_movies_note": "story cutscenes are Bink movies (BmGame/Movies/<nnn>_*.bik): 12 sound tracks each, 5-10 = one voice per language (identical in scenes without lines, 607), 1-4 the scene's sound - summed. Logos, loading screens left out",
-   "movies": {"dir": "BmGame/Movies", "match": "^(\\d{3}_|Cave_B1|gb1_|Batmobile_Intro_Alternate)", "tracks": [1, 2, 3, 4]},
+   "movies": {"dir": "BmGame/Movies", "match": "^(\\d{3}_|Cave_B1|gb1_|Batmobile_Intro_Alternate)", "tracks": [1, 2, 3, 4],
+    "moments": "movie_rumbles.json",
+    "_moments_note": "11-09: the game's own movie rumble tables (RSeqAct_FullScreenPlayer.Rumble) - movies vibrate only at those moments, with their own sound there; a movie without one stays still (was: the gated mix)"},
    "trees": "trees_seq.json",
    "dir": "seq"
   },
@@ -535,6 +537,54 @@
    "wave": "roar",
    "who": "any",
    "_slot": "roar"
+  },
+  {
+   "match": "^PL_BatmanCombatSFX\\.BM_TieUp$|^PS_RopeSnapSFX\\.Ropesnap(_Quiet)?$",
+   "wave": "impact",
+   "who": "any",
+   "why": "orig: Rescue_Chair_Hostage anim 200"
+  },
+  {
+   "match": "^SJ_Combat_SubjectivesSFX\\.Glide_Kick_Impact$",
+   "wave": "blunt",
+   "who": "any",
+   "why": "orig: Cape_Kick anim 70"
+  },
+  {
+   "match": "^OBJ_GrateSFX\\.(grate_kick_(light|med|big)\\d+|GrateOff\\w*|Grate_Yank|Grate_Claw_Off|claw_impact)$",
+   "wave": "impact",
+   "who": "any",
+   "why": "orig: Grate_*_Kick/Rip anim 25-70"
+  },
+  {
+   "match": "^OBJ_GrateSFX\\.grate_(kick_silent_\\w+|silent_(rip|impact)01)$",
+   "wave": "soft",
+   "who": "any",
+   "why": "orig: Grate_*_Silent anim 16-18"
+  },
+  {
+   "match": "^EN_(DV_JK_TeethSFX|VenomJkrTeeth)\\.Explode$|^PS_VenomPodSFX\\.VenomPod_Explode(02)?$|^PS_Expolsion1SFX\\.GasMains1$",
+   "wave": "boom",
+   "who": "any",
+   "why": "orig: ChatteringTeeth ExplodeRumble, DmgType_PodExplosion, Kismet GasMains 255"
+  },
+  {
+   "match": "^PS_ElectricFloorSFX\\.Electrocution$",
+   "wave": "hurt",
+   "who": "any",
+   "why": "orig: DmgType_ElectricFloor"
+  },
+  {
+   "match": "^EN_VenomJkrbigfall\\.BigLand$",
+   "wave": "land",
+   "who": "any",
+   "why": "orig: Jump_Out_Of_Ring anim 65 (Titan footsteps EN_VenomHenchmanSFX: project not in the index, left out)"
+  },
+  {
+   "match": "^SP_BatwingGlassSFX\\.BatwingGlass_Break$|^SP_BatwingCapsuleSFX\\.Capsule_Impact$|^PS_FireSFX\\.FlameClose01$|^SP_VenomPlants01SFX\\.Venom_Plants01$|^PS_LiftSFX\\.(Thud|Start|Stop)$|^SP_PowerCutSFX\\.(PowerCut|PowerCut_PowerUp)$|^DR_SewerDoorSFX\\.Sewer_Door_Bang01$|^PS_SkeletonSpawnSFX\\.Skeleton_Spawn01$|^SP_ScarecrowSFX\\.Scarecrow_Lift_Seq_Stop$",
+   "wave": "quake",
+   "who": "any",
+   "why": "orig: Kismet SeqAct_ForceFeedback beside these sounds"
   }
  ],
  "style": {
